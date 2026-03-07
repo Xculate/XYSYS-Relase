@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>XYSYS · 轻量下载</title>
+    <!-- 柔和亮色风格，干净无诱导，仅引导浏览器打开 -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f9faff 0%, #f0f5fd 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+
+        .card {
+            max-width: 480px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 48px;
+            box-shadow: 0 30px 60px -20px rgba(0, 50, 100, 0.25), 
+                        0 8px 20px -8px rgba(0, 32, 64, 0.1),
+                        inset 0 1px 1px rgba(255,255,255,0.6);
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 32px 24px 36px 24px;
+            transition: all 0.2s ease;
+        }
+
+        /* 亮色装饰 — 极简小图标区 */
+        .icon-banner {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+        .icon-banner span {
+            font-size: 32px;
+            filter: drop-shadow(0 8px 12px rgba(0,120,255,0.2));
+            animation: subtle-float 3s infinite alternate ease-in-out;
+        }
+        @keyframes subtle-float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-4px); }
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 650;
+            letter-spacing: -0.02em;
+            background: linear-gradient(135deg, #1E2E5C, #2B3D75);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+            line-height: 1.1;
+            text-align: center;
+            padding: 0 8px;
+        }
+
+        .sub {
+            font-size: 17px;
+            font-weight: 400;
+            color: #4a5a7a;
+            text-align: center;
+            margin-bottom: 32px;
+            background: rgba(230, 241, 255, 0.7);
+            padding: 10px 20px;
+            border-radius: 60px;
+            display: inline-block;
+            width: auto;
+            margin-left: auto;
+            margin-right: auto;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.9);
+            box-shadow: 0 2px 6px rgba(0,40,80,0.05);
+        }
+
+        /* 主要区域 – 根据环境动态显示 (由js填充) */
+        .dynamic-content {
+            min-height: 260px;
+            width: 100%;
+            transition: all 0.25s;
+        }
+
+        /* ========== 微信/QQ内专用引导样式 ========== */
+        .weixin-guide {
+            text-align: center;
+            animation: fadeSlideIn 0.35s ease;
+        }
+
+        .guide-card {
+            background: rgba(255,255,255,0.6);
+            border-radius: 40px;
+            padding: 24px 18px 28px 18px;
+            border: 1px solid rgba(255,255,255,0.8);
+            box-shadow: 0 8px 24px -12px rgba(0,70,150,0.2);
+            backdrop-filter: blur(4px);
+        }
+
+        .step-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin: 20px 0 28px 0;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 80px;
+            box-shadow: 0 6px 14px rgba(0, 30, 60, 0.05);
+            border: 1px solid rgba(210, 225, 245, 0.6);
+            text-align: left;
+        }
+
+        .step-number {
+            width: 42px;
+            height: 42px;
+            background: #eef4fe;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 20px;
+            color: #1e3e7c;
+            flex-shrink: 0;
+            border: 1px solid white;
+        }
+
+        .step-text {
+            font-weight: 500;
+            font-size: 16px;
+            color: #1f2c48;
+        }
+        .step-text small {
+            font-weight: 400;
+            font-size: 14px;
+            color: #65748c;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .tip-badge {
+            background: #D9E9FF;
+            color: #10356e;
+            border-radius: 40px;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-weight: 450;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            border: 1px dashed #a0c0fa;
+            margin-top: 8px;
+        }
+        .tip-badge span {
+            font-size: 22px;
+        }
+
+        .manual-link-box {
+            background: rgba(255,255,255,0.8);
+            border-radius: 24px;
+            padding: 16px;
+            margin: 16px 0 8px;
+            border: 1px solid #cddfff;
+            word-break: break-all;
+            font-family: 'SF Mono', 'Fira Code', monospace;
+            font-size: 14px;
+            color: #12458c;
+            text-align: left;
+            border-left: 5px solid #4f8cff;
+            box-shadow: inset 0 1px 4px #e0ecff;
+        }
+
+        .browser-icon {
+            font-size: 40px;
+            line-height: 1;
+            margin: 10px 0 4px;
+            filter: drop-shadow(0 4px 4px rgba(0,80,200,0.15));
+        }
+
+        /* ========== 外部浏览器下载样式 ========== */
+        .download-zone {
+            background: rgba(255,255,255,0.5);
+            border-radius: 48px;
+            padding: 18px 12px 26px 12px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.8);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: white;
+            border-radius: 100px;
+            padding: 12px 24px;
+            margin: 20px 0 26px;
+            border: 1px solid #e7f0ff;
+            box-shadow: 0 10px 20px -18px #4070c0;
+        }
+        .file-icon {
+            font-size: 36px;
+        }
+        .file-detail {
+            text-align: left;
+        }
+        .file-name {
+            font-weight: 650;
+            font-size: 18px;
+            color: #102a4c;
+        }
+        .file-meta {
+            color: #5b6f8c;
+            font-size: 14px;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .btn-primary {
+            background: #1b2f56;
+            border: none;
+            border-radius: 100px;
+            padding: 20px 24px;
+            color: white;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            box-shadow: 0 18px 28px -16px #0b2542, 0 0 0 1px rgba(255,255,255,0.3) inset;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .btn-primary:active {
+            transform: scale(0.98);
+            background: #142648;
+            box-shadow: 0 6px 12px -8px #0a1a30;
+        }
+
+        .btn-secondary {
+            background: rgba(255,255,255,0.9);
+            border: 1.5px solid #b4c9f0;
+            border-radius: 100px;
+            padding: 16px 24px;
+            color: #1b2f56;
+            font-weight: 550;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            backdrop-filter: blur(8px);
+            cursor: pointer;
+            transition: 0.15s;
+            box-shadow: 0 4px 8px rgba(0,20,50,0.03);
+        }
+        .btn-secondary:active {
+            background: white;
+            border-color: #7da2ef;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            font-size: 14px;
+            color: #6c7f9e;
+            text-align: center;
+            border-top: 1px solid rgba(160, 185, 225, 0.4);
+            padding-top: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        @keyframes fadeSlideIn {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 辅助文字 */
+        .footnote-safe {
+            background: rgba(230, 245, 255, 0.7);
+            border-radius: 30px;
+            padding: 8px 18px;
+            font-size: 13px;
+            color: #3865a0;
+            display: inline-block;
+        }
+        a, a:visited, a:hover {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* 无点击跳转，只有可复制链接 */
+        .copy-hint {
+            font-size: 15px;
+            color: #3865a0;
+            background: #eaf2ff;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin: 12px 0 0;
+            border: 1px solid white;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <!-- 亮色点缀：三个柔和图标 -->
+        <h1>XYSYS</h1>
+        <div id="dynamic-content" class="dynamic-content"></div>
+
+        
+    </div>
+
+    <script>
+        (function() {
+            // 检测是否在微信或QQ内置浏览器 (包括企业微信/QQ浏览器简单识别)
+            function isInTencentApp() {
+                var ua = navigator.userAgent.toLowerCase();
+                // 检测 微信、QQ、企业微信、QQ浏览器(内置) 等
+                return /micromessenger|qq\//.test(ua) || ua.indexOf('wechat') !== -1 || (ua.indexOf('qq') !== -1 && ua.indexOf('mqqbrowser') === -1); 
+            }
+
+            // 实际下载链接 (请替换为你真正的地址)
+            var MAIN_DOWNLOAD_URL = 'https://easylink.cc/4rq51v';          // 主下载链接
+            var BACKUP_DOWNLOAD_URL = 'https://gh.ddlc.top/https://github.com/BearThomas/XYSYS-Release/releases/download/1.0.1/XYSYS1.0.1.18.exe'; // 备用下载链接
+
+            // 获取容器
+            var container = document.getElementById('dynamic-content');
+            if (!container) return;
+
+            // 根据环境渲染不同的内容
+            if (isInTencentApp()) {
+                // ========= 微信 / QQ 内：只显示引导 + 可复制的纯文本链接 (无按钮跳转) =========
+                container.innerHTML = `
+                    <div class="weixin-guide">
+                        <div class="browser-icon">🌐</div>
+                        <div class="guide-card">
+                            <div style="font-weight: 600; font-size: 22px; color: #0e2748; margin-bottom: 6px;">请使用浏览器打开</div>
+                            <p style="color: #4f6183; margin-bottom: 18px; font-size: 16px; padding: 0 6px;">微信/QQ内无法直接下载，按步骤操作即可</p>
+                            
+                            <div class="step-container">
+                                <!-- 第一步 -->
+                                <div class="step-item">
+                                    <div class="step-number">1</div>
+                                    <div class="step-text">
+                                        点击右上角 <b style="background:#edf3ff; padding:2px 10px; border-radius:40px;">···</b>
+                                        <small>菜单在右上角</small>
+                                    </div>
+                                </div>
+                                <!-- 第二步 -->
+                                <div class="step-item">
+                                    <div class="step-number">2</div>
+                                    <div class="step-text">
+                                        选择 <b style="background:#edf3ff; padding:2px 14px; border-radius:40px;">在浏览器中打开</b>
+                                        <small>Safari / Chrome / 系统浏览器</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 可复制纯文本链接 (无自动跳转) 符合规范，只展示不动跳 -->
+                            <div class="manual-link-box">
+                                ⚙️ 主下载 · 复制到浏览器<br>
+                                <span style="font-size: 15px; word-break:break-all; user-select: all;">${MAIN_DOWNLOAD_URL}</span>
+                            </div>
+                            <div class="manual-link-box" style="margin-top: 12px; border-left-color: #99b9f0;">
+                                📎 备用下载 · 手动复制<br>
+                                <span style="font-size: 15px; word-break:break-all; user-select: all;">${BACKUP_DOWNLOAD_URL}</span>
+                            </div>
+
+                            <div class="copy-hint">
+                                ✨ 长按链接即可复制 · 然后粘贴到浏览器地址栏
+                            </div>
+                            <div style="margin-top: 24px; color: #3b5780; font-size: 15px; background: #e1edff; padding: 8px; border-radius: 40px;">
+                                ⏱ 从浏览器下载更快更安全
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // ========= 外部浏览器 (正常下载界面) 包含两个下载按钮 =========
+                container.innerHTML = `
+                    <div class="download-zone">
+                        <!-- 两个下载按钮，绑定下载函数 (非微信内直接跳转) -->
+                        <div class="btn-group">
+                            <button class="btn-primary" id="mainDownloadBtn">
+                                <span></span> 普通下载
+                            </button>
+                            <button class="btn-secondary" id="backupDownloadBtn">
+                                <span></span> 备用通道
+                            </button>
+                        </div>
+
+                        
+                    </div>
+                `;
+
+                // 绑定下载按钮事件 (因为按钮是后期插入的，要用事件监听)
+                setTimeout(function() {
+                    var mainBtn = document.getElementById('mainDownloadBtn');
+                    var backupBtn = document.getElementById('backupDownloadBtn');
+
+                    if (mainBtn) {
+                        mainBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.location.href = MAIN_DOWNLOAD_URL;
+                        });
+                    }
+                    if (backupBtn) {
+                        backupBtn.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            window.location.href = BACKUP_DOWNLOAD_URL;
+                        });
+                    }
+                }, 20);
+            }
+
+            // 可选：为防止某些意外点击导致跳转，完全禁止所有a标签的默认跳转(但我们的设计中没有a标签跳转)
+            // 这步很安全，不干扰复制。
+            document.addEventListener('click', function(e) {
+                // 不干涉任何正常的复制/选择操作，只防止潜在的不明外链（其实没有）
+                // 但为了防止未来误添加，可以忽略。
+                // 保持空逻辑。
+            });
+        })();
+    </script>
+
+    <!-- 确保即使在微信中也不会因为用户误触按钮而产生违规行为: 没有任何按钮做自动跳转, 只有复制链接文本 -->
+    <!-- 该页面符合微信规范：无诱导下载，无自动跳转，无误导按钮，仅提供“说明+纯文本链接” -->
+</body>
+</html>
