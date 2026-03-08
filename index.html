@@ -350,7 +350,7 @@
                     this.downloadedParts = [];
                     this.maxRetries = 3;
                     // 配置文件路径：指向你的 manifest.json
-                    this.MANIFEST_URL = './manifest.json'; // 可根据需要修改
+                    this.MANIFEST_URL = 'https://gitee.com/bearThomas/XYSYS-Release/releases/download/XYSYSDOWNLOAD/manifest.json'; // 可根据需要修改
                 }
 
                 async loadManifest() {
@@ -381,7 +381,7 @@
                 async downloadPart(partInfo, retry = 0) {
                     try {
                         // 构建分片URL - 假设分片和manifest在同一目录
-                        const partUrl = `./${partInfo.name}`;
+                        const partUrl = `https://gitee.com/bearThomas/XYSYS-Release/releases/download/XYSYSDOWNLOAD/XYSYS1.0.1.20.exe.part001/${partInfo.name}`;
                         
                         const response = await fetch(partUrl);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
