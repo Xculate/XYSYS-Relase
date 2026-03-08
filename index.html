@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>XYSYS · 轻量下载</title>
-    <!-- 柔和亮色风格，干净无诱导，仅引导浏览器打开 -->
     <style>
         * {
             margin: 0;
@@ -37,24 +36,6 @@
             transition: all 0.2s ease;
         }
 
-        /* 亮色装饰 — 极简小图标区 */
-        .icon-banner {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            margin-bottom: 20px;
-        }
-        .icon-banner span {
-            font-size: 32px;
-            filter: drop-shadow(0 8px 12px rgba(0,120,255,0.2));
-            animation: subtle-float 3s infinite alternate ease-in-out;
-        }
-        @keyframes subtle-float {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-4px); }
-        }
-
         h1 {
             font-size: 34px;
             font-weight: 650;
@@ -74,7 +55,7 @@
             font-weight: 400;
             color: #4a5a7a;
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
             background: rgba(230, 241, 255, 0.7);
             padding: 10px 20px;
             border-radius: 60px;
@@ -87,7 +68,6 @@
             box-shadow: 0 2px 6px rgba(0,40,80,0.05);
         }
 
-        /* 主要区域 – 根据环境动态显示 (由js填充) */
         .dynamic-content {
             min-height: 260px;
             width: 100%;
@@ -156,25 +136,6 @@
             margin-top: 4px;
         }
 
-        .tip-badge {
-            background: #D9E9FF;
-            color: #10356e;
-            border-radius: 40px;
-            padding: 14px 18px;
-            font-size: 15px;
-            font-weight: 450;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            border: 1px dashed #a0c0fa;
-            margin-top: 8px;
-        }
-        .tip-badge span {
-            font-size: 22px;
-        }
-
         .manual-link-box {
             background: rgba(255,255,255,0.8);
             border-radius: 24px;
@@ -195,6 +156,16 @@
             line-height: 1;
             margin: 10px 0 4px;
             filter: drop-shadow(0 4px 4px rgba(0,80,200,0.15));
+        }
+
+        .copy-hint {
+            font-size: 15px;
+            color: #3865a0;
+            background: #eaf2ff;
+            border-radius: 28px;
+            padding: 14px 18px;
+            margin: 12px 0 0;
+            border: 1px solid white;
         }
 
         /* ========== 外部浏览器下载样式 ========== */
@@ -237,7 +208,7 @@
             display: flex;
             flex-direction: column;
             gap: 14px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .btn-primary {
@@ -263,6 +234,11 @@
             background: #142648;
             box-shadow: 0 6px 12px -8px #0a1a30;
         }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            transform: none;
+            cursor: not-allowed;
+        }
 
         .btn-secondary {
             background: rgba(255,255,255,0.9);
@@ -286,6 +262,49 @@
             border-color: #7da2ef;
         }
 
+        .progress {
+            height: 20px;
+            background: rgba(240, 240, 240, 0.6);
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 20px 0 16px;
+            border: 1px solid rgba(255,255,255,0.8);
+            backdrop-filter: blur(4px);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #4f8cff, #7aa5ff);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 30px;
+            box-shadow: 0 0 10px rgba(79,140,255,0.5);
+        }
+
+        .status {
+            margin: 16px 0 12px;
+            padding: 16px 18px;
+            border-radius: 40px;
+            font-size: 15px;
+            text-align: center;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.9);
+        }
+        .status.loading { background: #e3f2fd; color: #0d47a1; }
+        .status.success { background: #d4edda; color: #155724; }
+        .status.error { background: #f8d7da; color: #721c24; }
+
+        .retry-hint {
+            margin-top: 20px;
+            padding: 16px 20px;
+            background: rgba(255,243,205,0.7);
+            border-radius: 32px;
+            font-size: 14px;
+            color: #856404;
+            backdrop-filter: blur(4px);
+            border: 1px solid #ffe9b0;
+        }
+
         .footer-note {
             margin-top: 28px;
             font-size: 14px;
@@ -303,62 +322,174 @@
             0% { opacity: 0; transform: translateY(12px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-
-        /* 辅助文字 */
-        .footnote-safe {
-            background: rgba(230, 245, 255, 0.7);
-            border-radius: 30px;
-            padding: 8px 18px;
-            font-size: 13px;
-            color: #3865a0;
-            display: inline-block;
-        }
-        a, a:visited, a:hover {
-            text-decoration: none;
-            color: inherit;
-        }
-
-        /* 无点击跳转，只有可复制链接 */
-        .copy-hint {
-            font-size: 15px;
-            color: #3865a0;
-            background: #eaf2ff;
-            border-radius: 28px;
-            padding: 14px 18px;
-            margin: 12px 0 0;
-            border: 1px solid white;
-        }
     </style>
 </head>
 <body>
     <div class="card">
-        <!-- 亮色点缀：三个柔和图标 -->
         <h1>XYSYS</h1>
+        <div class="sub">⚡️ 拼接下载 · 智能加速</div>
         <div id="dynamic-content" class="dynamic-content"></div>
-
-        
+        <div class="footer-note">
+            <span>🛡️ 安全校验</span> <span style="opacity:0.5;">|</span> <span>分片完整性保护</span>
+        </div>
     </div>
 
     <script>
         (function() {
-            // 检测是否在微信或QQ内置浏览器 (包括企业微信/QQ浏览器简单识别)
+            // ---------- 检测环境 ----------
             function isInTencentApp() {
                 var ua = navigator.userAgent.toLowerCase();
-                // 检测 微信、QQ、企业微信、QQ浏览器(内置) 等
                 return /micromessenger|qq\//.test(ua) || ua.indexOf('wechat') !== -1 || (ua.indexOf('qq') !== -1 && ua.indexOf('mqqbrowser') === -1); 
             }
 
-            // 实际下载链接 (请替换为你真正的地址)
-            var MAIN_DOWNLOAD_URL = 'https://easylink.cc/4rq51v';          // 主下载链接
-            var BACKUP_DOWNLOAD_URL = 'https://gh.ddlc.top/https://github.com/BearThomas/XYSYS-Release/releases/download/1.0.1/XYSYS1.0.1.18.exe'; // 备用下载链接
+            // ---------- 原来的 FileDownloader 逻辑 (整合) ----------
+            class FileDownloader {
+                constructor() {
+                    this.manifest = null;
+                    this.parts = [];
+                    this.downloadedParts = [];
+                    this.maxRetries = 3;
+                    // 配置文件路径：指向你的 manifest.json
+                    this.MANIFEST_URL = './manifest.json'; // 可根据需要修改
+                }
 
-            // 获取容器
-            var container = document.getElementById('dynamic-content');
+                async loadManifest() {
+                    try {
+                        const response = await fetch(this.MANIFEST_URL);
+                        if (!response.ok) throw new Error('无法加载文件信息');
+                        this.manifest = await response.json();
+
+                        // 更新文件信息显示（如果存在对应元素）
+                        const fileInfoDiv = document.getElementById('fileInfo');
+                        if (fileInfoDiv) {
+                            fileInfoDiv.style.display = 'flex';
+                            document.getElementById('fileName').textContent = this.manifest.file_name;
+                            document.getElementById('fileSize').textContent = (this.manifest.file_size / 1024 / 1024).toFixed(2);
+                            document.getElementById('chunkCount').textContent = this.manifest.chunk_count;
+                        }
+
+                        // 更新状态
+                        this.updateStatus('✅ 文件信息加载成功，点击开始下载', 'loading');
+                        const downloadBtn = document.getElementById('downloadBtn');
+                        if (downloadBtn) downloadBtn.disabled = false;
+                        
+                    } catch (error) {
+                        this.updateStatus(`❌ 加载失败：${error.message}`, 'error');
+                    }
+                }
+
+                async downloadPart(partInfo, retry = 0) {
+                    try {
+                        // 构建分片URL - 假设分片和manifest在同一目录
+                        const partUrl = `./${partInfo.name}`;
+                        
+                        const response = await fetch(partUrl);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        
+                        const blob = await response.blob();
+                        return blob;
+                        
+                    } catch (error) {
+                        if (retry < this.maxRetries) {
+                            const waitTime = Math.pow(2, retry) * 1000;
+                            this.updateStatus(`⏳ 下载分片 ${partInfo.name} 失败，${waitTime/1000}秒后重试 (${retry+1}/${this.maxRetries})...`, 'loading');
+                            
+                            await new Promise(r => setTimeout(r, waitTime));
+                            return this.downloadPart(partInfo, retry + 1);
+                        }
+                        throw error;
+                    }
+                }
+
+                updateStatus(message, type = 'loading') {
+                    const statusDiv = document.getElementById('downloadStatus');
+                    if (statusDiv) {
+                        statusDiv.className = `status ${type}`;
+                        statusDiv.innerHTML = message;
+                    }
+                }
+
+                updateProgress(percent) {
+                    const progressBar = document.getElementById('progressBar');
+                    if (progressBar) {
+                        progressBar.style.width = `${percent}%`;
+                    }
+                }
+
+                async startDownload() {
+                    if (!this.manifest) return;
+                    
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    if (downloadBtn) downloadBtn.disabled = true;
+                    
+                    this.updateStatus('⏳ 准备下载...', 'loading');
+                    this.updateProgress(0);
+
+                    try {
+                        const parts = this.manifest.parts;
+                        const totalParts = parts.length;
+                        let downloadedBlobs = [];
+
+                        // 按顺序下载所有分片
+                        for (let i = 0; i < totalParts; i++) {
+                            const part = parts[i];
+                            
+                            this.updateStatus(`⏳ 正在下载分片 ${i+1}/${totalParts}: ${part.name}`, 'loading');
+                            
+                            const blob = await this.downloadPart(part);
+                            downloadedBlobs[i] = blob;
+                            
+                            // 更新进度
+                            const progress = ((i + 1) / totalParts) * 100;
+                            this.updateProgress(progress);
+                        }
+
+                        // 拼接所有分片
+                        this.updateStatus('🔄 正在拼接文件...', 'loading');
+                        const fullFileBlob = new Blob(downloadedBlobs);
+
+                        // 校验文件大小
+                        if (fullFileBlob.size !== this.manifest.file_size) {
+                            throw new Error('文件大小不匹配，可能下载不完整');
+                        }
+
+                        // 触发下载
+                        const url = URL.createObjectURL(fullFileBlob);
+                        const a = document.createElement('a');
+                        a.href = url;
+                        a.download = this.manifest.file_name;
+                        document.body.appendChild(a);
+                        a.click();
+                        document.body.removeChild(a);
+                        URL.revokeObjectURL(url);
+
+                        this.updateStatus(`✅ 下载完成！文件已保存为: ${this.manifest.file_name}`, 'success');
+                        this.updateProgress(100);
+
+                    } catch (error) {
+                        this.updateStatus(`❌ 下载失败：${error.message}。请稍后重试。`, 'error');
+                        
+                        // 显示错误详情
+                        const retryHint = document.getElementById('retryHint');
+                        if (retryHint) {
+                            retryHint.style.display = 'block';
+                            retryHint.innerHTML = `<strong>🔍 错误详情：</strong>${error.message}`;
+                        }
+                    } finally {
+                        if (downloadBtn) downloadBtn.disabled = false;
+                    }
+                }
+            }
+
+            // ---------- 页面渲染 ----------
+            const container = document.getElementById('dynamic-content');
             if (!container) return;
 
-            // 根据环境渲染不同的内容
+            // 创建下载器实例（但先不加载，等渲染后再看情况）
+            const downloader = new FileDownloader();
+
             if (isInTencentApp()) {
-                // ========= 微信 / QQ 内：只显示引导 + 可复制的纯文本链接 (无按钮跳转) =========
+                // ---------- 微信/QQ内：只显示引导 ----------
                 container.innerHTML = `
                     <div class="weixin-guide">
                         <div class="browser-icon">🌐</div>
@@ -367,7 +498,6 @@
                             <p style="color: #4f6183; margin-bottom: 18px; font-size: 16px; padding: 0 6px;">微信/QQ内无法直接下载，按步骤操作即可</p>
                             
                             <div class="step-container">
-                                <!-- 第一步 -->
                                 <div class="step-item">
                                     <div class="step-number">1</div>
                                     <div class="step-text">
@@ -375,7 +505,6 @@
                                         <small>菜单在右上角</small>
                                     </div>
                                 </div>
-                                <!-- 第二步 -->
                                 <div class="step-item">
                                     <div class="step-number">2</div>
                                     <div class="step-text">
@@ -385,74 +514,66 @@
                                 </div>
                             </div>
 
-                            <!-- 可复制纯文本链接 (无自动跳转) 符合规范，只展示不动跳 -->
                             <div class="manual-link-box">
-                                ⚙️ 主下载 · 复制到浏览器<br>
-                                <span style="font-size: 15px; word-break:break-all; user-select: all;">${MAIN_DOWNLOAD_URL}</span>
-                            </div>
-                            <div class="manual-link-box" style="margin-top: 12px; border-left-color: #99b9f0;">
-                                📎 备用下载 · 手动复制<br>
-                                <span style="font-size: 15px; word-break:break-all; user-select: all;">${BACKUP_DOWNLOAD_URL}</span>
+                                ⚙️ 下载链接 (长按复制)<br>
+                                <span style="font-size: 15px; word-break:break-all; user-select: all;">${window.location.href}</span>
                             </div>
 
                             <div class="copy-hint">
-                                ✨ 长按链接即可复制 · 然后粘贴到浏览器地址栏
-                            </div>
-                            <div style="margin-top: 24px; color: #3b5780; font-size: 15px; background: #e1edff; padding: 8px; border-radius: 40px;">
-                                ⏱ 从浏览器下载更快更安全
+                                ✨ 复制链接后粘贴到浏览器地址栏
                             </div>
                         </div>
                     </div>
                 `;
             } else {
-                // ========= 外部浏览器 (正常下载界面) 包含两个下载按钮 =========
+                // ---------- 外部浏览器：显示下载界面，整合原逻辑 ----------
                 container.innerHTML = `
                     <div class="download-zone">
-                        <!-- 两个下载按钮，绑定下载函数 (非微信内直接跳转) -->
+                        <!-- 文件信息 -->
+                        <div id="fileInfo" class="file-info" style="display: none;">
+                            <div class="file-icon">📦</div>
+                            <div class="file-detail">
+                                <div class="file-name" id="fileName">加载中...</div>
+                                <div class="file-meta" id="fileMeta">
+                                    <span id="fileSize">0</span> MB · <span id="chunkCount">0</span> 个分片
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 进度条 -->
+                        <div class="progress">
+                            <div id="progressBar" class="progress-bar"></div>
+                        </div>
+
+                        <!-- 状态信息 -->
+                        <div id="downloadStatus" class="status loading">
+                            ⏳ 正在加载文件信息...
+                        </div>
+
+                        <!-- 按钮组 -->
                         <div class="btn-group">
-                            <button class="btn-primary" id="mainDownloadBtn">
-                                <span></span> 普通下载
-                            </button>
-                            <button class="btn-secondary" id="backupDownloadBtn">
-                                <span></span> 备用通道
+                            <button class="btn-primary" id="downloadBtn" disabled>
+                                ⬇️ 开始下载
                             </button>
                         </div>
 
-                        
+                        <!-- 错误提示区（初始隐藏） -->
+                        <div id="retryHint" class="retry-hint" style="display: none;"></div>
                     </div>
                 `;
 
-                // 绑定下载按钮事件 (因为按钮是后期插入的，要用事件监听)
-                setTimeout(function() {
-                    var mainBtn = document.getElementById('mainDownloadBtn');
-                    var backupBtn = document.getElementById('backupDownloadBtn');
-
-                    if (mainBtn) {
-                        mainBtn.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            window.location.href = MAIN_DOWNLOAD_URL;
-                        });
-                    }
-                    if (backupBtn) {
-                        backupBtn.addEventListener('click', function(e) {
-                            e.preventDefault();
-                            window.location.href = BACKUP_DOWNLOAD_URL;
-                        });
+                // 绑定下载按钮事件
+                setTimeout(() => {
+                    const downloadBtn = document.getElementById('downloadBtn');
+                    if (downloadBtn) {
+                        downloadBtn.addEventListener('click', () => downloader.startDownload());
                     }
                 }, 20);
-            }
 
-            // 可选：为防止某些意外点击导致跳转，完全禁止所有a标签的默认跳转(但我们的设计中没有a标签跳转)
-            // 这步很安全，不干扰复制。
-            document.addEventListener('click', function(e) {
-                // 不干涉任何正常的复制/选择操作，只防止潜在的不明外链（其实没有）
-                // 但为了防止未来误添加，可以忽略。
-                // 保持空逻辑。
-            });
+                // 加载文件信息
+                downloader.loadManifest();
+            }
         })();
     </script>
-
-    <!-- 确保即使在微信中也不会因为用户误触按钮而产生违规行为: 没有任何按钮做自动跳转, 只有复制链接文本 -->
-    <!-- 该页面符合微信规范：无诱导下载，无自动跳转，无误导按钮，仅提供“说明+纯文本链接” -->
 </body>
 </html>

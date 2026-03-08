@@ -1,0 +1,27 @@
+{
+  "file_name": "XYSYS1.0.1.20.exe",
+  "file_size": 153228552,
+  "file_md5": "e98d26834582fe250f425574e714c8f6",
+  "chunk_size_mb": 70,
+  "chunk_count": 3,
+  "parts": [
+    {
+      "name": "XYSYS1.0.1.20.exe.part001",
+      "index": 0,
+      "size": 73400320,
+      "md5": "f7d8c0bf3b42238b2b1fc0f0ed346414"
+    },
+    {
+      "name": "XYSYS1.0.1.20.exe.part002",
+      "index": 1,
+      "size": 73400320,
+      "md5": "2e73db4b0e5bbb24b8c27cc22f6caba7"
+    },
+    {
+      "name": "XYSYS1.0.1.20.exe.part003",
+      "index": 2,
+      "size": 6427912,
+      "md5": "47f9665e6906f0d5c54bca55e4eb5ede"
+    }
+  ]
+}
