@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>XYSYS · 轻量下载</title>
     <style>
-        /* 这里保留你原本所有的 CSS 样式，无需改动 */
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, sans-serif; }
         body { background: linear-gradient(145deg, #f9faff 0%, #f0f5fd 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
         .card { max-width: 480px; width: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(12px); border-radius: 48px; box-shadow: 0 30px 60px -20px rgba(0, 50, 100, 0.25); border: 1px solid rgba(255,255,255,0.5); padding: 32px 24px 36px 24px; }
@@ -15,7 +14,7 @@
         .btn-primary { background: #1b2f56; border: none; border-radius: 100px; padding: 20px 24px; color: white; font-size: 20px; font-weight: 600; width: 100%; cursor: pointer; transition: all 0.2s; }
         .btn-primary:disabled { background: #6c7f9e; cursor: not-allowed; opacity: 0.8; }
         .copy-hint { font-size: 15px; color: #3865a0; background: #eaf2ff; border-radius: 28px; padding: 14px 18px; margin-top: 12px; }
-        #download-iframe { display: none; } /* 关键：隐藏的下载框架 */
+        #download-iframe { display: none; }
     </style>
 </head>
 <body>
@@ -32,15 +31,12 @@
                 var ua = navigator.userAgent.toLowerCase();
                 return /micromessenger|qq\//.test(ua) || ua.indexOf('wechat') !== -1; 
             }
-
-            // 你的下载地址
-            var MAIN_DOWNLOAD_URL = 'https://easylink.cc/z2bt04'; 
+            var MAIN_DOWNLOAD_URL = 'https://easylink.cc/w6uxls'; 
 
             var container = document.getElementById('dynamic-content');
             var dlIframe = document.getElementById('download-iframe');
 
             if (isInTencentApp()) {
-                // 微信/QQ 逻辑：引导复制
                 container.innerHTML = `
                     <div class="weixin-guide">
                         <div style="font-size:40px; margin-bottom:10px;">🌐</div>
@@ -50,7 +46,6 @@
                     </div>
                 `;
             } else {
-                // 外部浏览器逻辑：无刷新下载
                 container.innerHTML = `
                     <div class="download-zone">
                         <button class="btn-primary" id="mainDownloadBtn">
@@ -65,14 +60,9 @@
                 var mainBtn = document.getElementById('mainDownloadBtn');
                 
                 mainBtn.addEventListener('click', function() {
-                    // 1. 改变按钮状态，给用户反馈
                     mainBtn.disabled = true;
                     mainBtn.innerText = "正在请求下载...";
-
-                    // 2. 核心操作：通过隐藏 iframe 触发下载，页面不跳转
                     dlIframe.src = MAIN_DOWNLOAD_URL;
-
-                    // 3. 3秒后恢复按钮，允许再次点击（防止用户以为没点到）
                     setTimeout(function() {
                         mainBtn.disabled = false;
                         mainBtn.innerText = "🚀 立即下载 (140MB)";
